@@ -181,6 +181,7 @@ export default function PomodoroTimer() {
               onClick={resetTimer}
               className="p-2.5 rounded-full border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100/50 dark:hover:bg-slate-800 transition-all"
               title="Reset timer"
+              aria-label="Reset timer"
             >
               <RotateCcw className="w-4 h-4" />
             </button>

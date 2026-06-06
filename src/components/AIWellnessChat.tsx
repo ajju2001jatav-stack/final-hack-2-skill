@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useRef, useEffect, startTransition } from "react";
-import { Send, Sparkles, MessageSquare, Trash2, ArrowUpRight, Loader, HelpCircle } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Send, Sparkles, Trash2, ArrowUpRight, Loader } from "lucide-react";
 import { ChatMessage } from "../types";
 
 interface AIWellnessChatProps {
@@ -187,7 +187,7 @@ I have cleared the conversation. Speak freely—what's on your mind? How can we 
   return (
     <div id="ai-chat-module" className="flex flex-col h-[520px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden transition-all shadow-xs">
       {/* Chat header */}
-      <div className="px-5 py-4 border-b border-slate-50 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/50 dark:bg-slate-850/20">
+      <div className="px-5 py-4 border-b border-slate-50 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/20">
         <div className="flex items-center gap-2">
           <div className="p-2 bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-xl animate-pulse">
             <Sparkles className="w-4 h-4 fill-current" />
@@ -208,13 +208,14 @@ I have cleared the conversation. Speak freely—what's on your mind? How can we 
           onClick={handleClear}
           className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-lg transition-all"
           title="Clear Conversation"
+          aria-label="Clear Conversation"
         >
           <Trash2 className="w-4 h-4" />
         </button>
       </div>
 
       {/* Suggestion Chips */}
-      <div className="px-4 py-2 bg-indigo-50/50 dark:bg-slate-850/10 border-b border-indigo-100/25 dark:border-slate-805">
+      <div className="px-4 py-2 bg-indigo-50/50 dark:bg-slate-800/10 border-b border-indigo-100/25 dark:border-slate-800">
         <span className="text-[9px] uppercase tracking-wider font-semibold text-indigo-600/75 dark:text-indigo-400 block mb-1">
           Quick queries to ask
         </span>
@@ -224,7 +225,7 @@ I have cleared the conversation. Speak freely—what's on your mind? How can we 
               key={index}
               id={`query-chip-${index}`}
               onClick={() => handleSendMessage(chip)}
-              className="text-[11px] font-semibold text-slate-700 bg-white dark:bg-slate-800 dark:text-slate-350 hover:bg-indigo-500 hover:text-white border border-slate-150 dark:border-slate-800 rounded-full px-3 py-1 flex items-center gap-1 cursor-pointer transition-all flex-shrink-0"
+              className="text-[11px] font-semibold text-slate-700 bg-white dark:bg-slate-800 dark:text-slate-350 hover:bg-indigo-500 hover:text-white border border-slate-200 dark:border-slate-800 rounded-full px-3 py-1 flex items-center gap-1 cursor-pointer transition-all flex-shrink-0"
             >
               <span>{chip}</span>
               <ArrowUpRight className="w-3 h-3 opacity-60" />
@@ -248,7 +249,7 @@ I have cleared the conversation. Speak freely—what's on your mind? How can we 
               className={`max-w-[85%] rounded-2xl p-4 border transition-all ${
                 msg.role === "user"
                   ? "bg-slate-900 border-transparent text-white dark:bg-slate-800 dark:text-slate-200 rounded-tr-xs"
-                  : "bg-white border-slate-100 dark:bg-slate-850 dark:border-slate-800 text-slate-800 dark:text-slate-300 rounded-tl-xs shadow-xs"
+                  : "bg-white border-slate-100 dark:bg-slate-800 dark:border-slate-800 text-slate-800 dark:text-slate-300 rounded-tl-xs shadow-xs"
               }`}
             >
               <div className="flex items-center gap-1.5 mb-1 text-[10px] opacity-60 uppercase font-semibold">
@@ -270,7 +271,7 @@ I have cleared the conversation. Speak freely—what's on your mind? How can we 
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-white border border-slate-100 dark:bg-slate-850 dark:border-slate-800 rounded-2xl rounded-tl-xs p-4 flex items-center gap-3 shadow-xs">
+            <div className="bg-white border border-slate-100 dark:bg-slate-800 dark:border-slate-800 rounded-2xl rounded-tl-xs p-4 flex items-center gap-3 shadow-xs">
               <Loader className="w-4 h-4 text-indigo-500 animate-spin" />
               <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">
                 Reflecting on Indian student experiences...
@@ -310,6 +311,7 @@ I have cleared the conversation. Speak freely—what's on your mind? How can we 
           type="submit"
           disabled={!input.trim() || isLoading}
           className="p-2.5 rounded-2xl bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 disabled:hover:bg-indigo-600 transition-all flex items-center justify-center flex-shrink-0 cursor-pointer"
+          aria-label="Send message"
         >
           <Send className="w-4 h-4 fill-current" />
         </button>

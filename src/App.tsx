@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useMemo, useTransition } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { 
   Heart, 
   Sparkles, 
@@ -38,7 +38,6 @@ import { calculateStreak } from "./utils/streak";
 import { getExamTheme } from "./utils/theme";
 
 export default function App() {
-  const [isPending, startTransition] = useTransition();
   // ----------------------------------------------------
   // Persistent Offline States (lazy loading)
   // ----------------------------------------------------
@@ -382,7 +381,7 @@ export default function App() {
               <PhoneCall className="w-4.5 h-4.5 text-rose-500 fill-current" />
               <div className="text-left text-xs">
                 <span className="block text-[10px] font-semibold text-rose-600 dark:text-rose-400 uppercase tracking-widest leading-none">iCall Helpline</span>
-                <a href="tel:9152987821" className="font-extrabold text-rose-700 dark:text-rose-450 underline">9152987821</a>
+                <a href="tel:9152987821" className="font-extrabold text-rose-700 dark:text-rose-400 underline">9152987821</a>
               </div>
             </div>
           </div>
@@ -424,11 +423,13 @@ export default function App() {
         </div>
 
         {/* View Tabs Selector */}
-        <div className="flex border-b border-slate-100 dark:border-slate-900 overflow-x-auto no-scrollbar gap-1.5 pt-1">
+        <div role="tablist" aria-label="MindSpace Navigation" className="flex border-b border-slate-100 dark:border-slate-900 overflow-x-auto no-scrollbar gap-1.5 pt-1">
           <button
             id="tab-btn-checkin"
+            role="tab"
+            aria-selected={activeTab === "checkin"}
+            aria-controls="tabpanel-checkin"
             onClick={() => setActiveTab("checkin")}
-            aria-current={activeTab === "checkin" ? "page" : undefined}
             className={`px-4 py-3 text-xs sm:text-sm font-display font-bold border-b-2 transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
               activeTab === "checkin"
                 ? `${theme.borderActive} ${theme.primaryTextVibrant} ${theme.bgLight_20} font-extrabold`
@@ -441,8 +442,10 @@ export default function App() {
           
           <button
             id="tab-btn-ai"
+            role="tab"
+            aria-selected={activeTab === "ai"}
+            aria-controls="tabpanel-ai"
             onClick={() => setActiveTab("ai")}
-            aria-current={activeTab === "ai" ? "page" : undefined}
             className={`px-4 py-3 text-xs sm:text-sm font-display font-bold border-b-2 transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
               activeTab === "ai"
                 ? `${theme.borderActive} ${theme.primaryTextVibrant} ${theme.bgLight_20} font-extrabold`
@@ -455,8 +458,10 @@ export default function App() {
           
           <button
             id="tab-btn-timers"
+            role="tab"
+            aria-selected={activeTab === "timers"}
+            aria-controls="tabpanel-timers"
             onClick={() => setActiveTab("timers")}
-            aria-current={activeTab === "timers" ? "page" : undefined}
             className={`px-4 py-3 text-xs sm:text-sm font-display font-bold border-b-2 transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
               activeTab === "timers"
                 ? `${theme.borderActive} ${theme.primaryTextVibrant} ${theme.bgLight_20} font-extrabold`
@@ -469,8 +474,10 @@ export default function App() {
           
           <button
             id="tab-btn-trends"
+            role="tab"
+            aria-selected={activeTab === "trends"}
+            aria-controls="tabpanel-trends"
             onClick={() => setActiveTab("trends")}
-            aria-current={activeTab === "trends" ? "page" : undefined}
             className={`px-4 py-3 text-xs sm:text-sm font-display font-bold border-b-2 transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
               activeTab === "trends"
                 ? `${theme.borderActive} ${theme.primaryTextVibrant} ${theme.bgLight_20} font-extrabold`
@@ -483,8 +490,10 @@ export default function App() {
           
           <button
             id="tab-btn-settings"
+            role="tab"
+            aria-selected={activeTab === "settings"}
+            aria-controls="tabpanel-settings"
             onClick={() => setActiveTab("settings")}
-            aria-current={activeTab === "settings" ? "page" : undefined}
             className={`px-4 py-3 text-xs sm:text-sm font-display font-bold border-b-2 transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
               activeTab === "settings"
                 ? `${theme.borderActive} ${theme.primaryTextVibrant} ${theme.bgLight_20} font-extrabold`
@@ -501,7 +510,7 @@ export default function App() {
           
           {/* TAB 1: DAILY CHECK-IN */}
           {activeTab === "checkin" && (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div id="tabpanel-checkin" role="tabpanel" aria-labelledby="tab-btn-checkin" className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
               
               {/* Check-In Logging Form */}
               <form 
@@ -542,6 +551,8 @@ export default function App() {
                         type="button"
                         key={m.value}
                         id={`mood-btn-${m.value}`}
+                        aria-label={`${m.value} out of 5: ${m.label}`}
+                        aria-pressed={selectedMood === m.value}
                         onClick={() => setSelectedMood(m.value as MoodValue)}
                         className={`p-3 rounded-2xl border text-center transition-all ${
                           selectedMood === m.value
@@ -575,6 +586,7 @@ export default function App() {
                           type="button"
                           key={trigger}
                           id={`trigger-btn-${trigger.toLowerCase().replace(/\s+/g, '-')}`}
+                          aria-pressed={isSelected}
                           onClick={() => toggleTriggerSelection(trigger)}
                           className={`text-xs px-3.5 py-2 rounded-xl border font-semibold transition-all ${
                             isSelected
@@ -715,7 +727,7 @@ export default function App() {
                           className={`p-3 border rounded-2xl flex items-center gap-3.5 transition-all ${
                             earned 
                               ? "bg-amber-50/40 dark:bg-amber-950/10 border-amber-200/50 dark:border-amber-900/40" 
-                              : "border-slate-100 dark:border-slate-805 opacity-45"
+                              : "border-slate-100 dark:border-slate-800 opacity-45"
                           }`}
                         >
                           <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${earned ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-400"}`}>
@@ -739,7 +751,7 @@ export default function App() {
                   </div>
 
                   {/* Personalised motivator box */}
-                  <div className={`p-3 rounded-2xl ${theme.bgLight_20} border ${theme.borderLight} text-[11px] font-medium text-slate-605 dark:text-slate-350 leading-relaxed mb-4.5`}>
+                  <div className={`p-3 rounded-2xl ${theme.bgLight_20} border ${theme.borderLight} text-[11px] font-medium text-slate-600 dark:text-slate-300 leading-relaxed mb-4.5`}>
                     <p>
                       <strong className={`${theme.primaryTextVibrant}`}>{theme.title} Active: </strong>
                       <span className="italic">{theme.motivation}</span>
@@ -756,7 +768,7 @@ export default function App() {
                         className={`text-xs p-2.5 font-bold rounded-xl border text-center transition-all ${
                           config.targetExam === x
                             ? `${theme.btnBg} text-white border-transparent`
-                            : "bg-transparent text-slate-700 dark:text-slate-350 border-slate-150 dark:border-slate-805 hover:bg-slate-50"
+                            : "bg-transparent text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50"
                         }`}
                       >
                         {x}
@@ -771,7 +783,7 @@ export default function App() {
 
           {/* TAB 2: AI COMPANION */}
           {activeTab === "ai" && (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div id="tabpanel-ai" role="tabpanel" aria-labelledby="tab-btn-ai" className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
               <div className="lg:col-span-8">
                 <AIWellnessChat currentExam={config.targetExam} />
               </div>
@@ -788,19 +800,19 @@ export default function App() {
                   </p>
 
                   <div className="space-y-2.5">
-                    <div className="p-3 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-100/70 dark:border-slate-805">
+                    <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100/70 dark:border-slate-800">
                       <span className="block text-[10px] font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 mb-0.5">Vandrevala Foundation</span>
                       <a href="tel:9999666555" className="text-sm font-black underline text-slate-800 dark:text-slate-200">9999666555</a>
                       <span className="text-[10px] text-slate-500 block leading-tight mt-1">24/7 • Free, confidential, compassionate assistance</span>
                     </div>
 
-                    <div className="p-3 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-100/70 dark:border-slate-805">
+                    <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100/70 dark:border-slate-800">
                       <span className="block text-[10px] font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 mb-0.5">iCall TISS Helpline</span>
                       <a href="tel:9152987821" className="text-sm font-black underline text-slate-800 dark:text-slate-200">9152987821</a>
                       <span className="text-[10px] text-slate-500 block leading-tight mt-1">Mon-Sat, 10 AM - 8 PM • Multilingual assistance</span>
                     </div>
 
-                    <div className="p-3 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-100/70 dark:border-slate-805">
+                    <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100/70 dark:border-slate-800">
                       <span className="block text-[10px] font-extrabold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 mb-0.5">AASRA India</span>
                       <a href="tel:919820466726" className="text-sm font-black underline text-slate-800 dark:text-slate-200">91-9820466726</a>
                       <span className="text-[10px] text-slate-500 block leading-tight mt-1">24/7 Support line</span>
@@ -813,7 +825,7 @@ export default function App() {
 
           {/* TAB 3: TIMERS AND BREATHING */}
           {activeTab === "timers" && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div id="tabpanel-timers" role="tabpanel" aria-labelledby="tab-btn-timers" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <BreathingExercise />
               <PomodoroTimer />
             </div>
@@ -821,7 +833,7 @@ export default function App() {
 
           {/* TAB 4: PROGRESS TRENDS */}
           {activeTab === "trends" && (
-            <div className="space-y-6">
+            <div id="tabpanel-trends" role="tabpanel" aria-labelledby="tab-btn-trends" className="space-y-6">
               
               {/* Dynamic Wellness Report Card */}
               {weeklySummaryReport && (
@@ -854,7 +866,7 @@ export default function App() {
 
           {/* TAB 5: SECURE CLOUD SYNC */}
           {activeTab === "settings" && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div id="tabpanel-settings" role="tabpanel" aria-labelledby="tab-btn-settings" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               
               {/* Sync Configuration Pane */}
               <div className="p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl space-y-4">
@@ -868,7 +880,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="p-4.5 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-150 dark:border-slate-805 space-y-3">
+                <div className="p-4.5 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
                   <div className="flex justify-between items-center text-xs">
                     <span className="font-bold text-slate-500">Your Generated Sync Key</span>
                     <span className="font-sans font-black text-rose-600 dark:text-rose-400 bg-white dark:bg-slate-800 px-3 py-1 rounded-lg border dark:border-slate-700">
@@ -879,9 +891,9 @@ export default function App() {
                     **This is anonymous.** No personal email or identity is ever logged to the cloud databases. This randomly generated key acts as your private retrieval system. Copy or save it somewhere!
                   </p>
 
-                  <div className="flex justify-between items-center border-t dark:border-slate-800 pt-3 text-[10px] font-medium text-slate-405">
+                  <div className="flex justify-between items-center border-t dark:border-slate-800 pt-3 text-[10px] font-medium text-slate-400">
                     <span>Last Synced:</span>
-                    <span className="font-semibold text-slate-600 dark:text-slate-355">
+                    <span className="font-semibold text-slate-600 dark:text-slate-300">
                       {config.lastSyncTime ? new Date(config.lastSyncTime).toLocaleString() : "Never synced yet"}
                     </span>
                   </div>
@@ -927,7 +939,7 @@ export default function App() {
                       value={syncInputKey}
                       onChange={(e) => setSyncInputKey(e.target.value)}
                       placeholder="e.g., IND-DF15..."
-                      className="w-full text-sm bg-slate-55 dark:bg-slate-800/60 border border-slate-150 dark:border-slate-800 rounded-2xl px-4 py-3 font-semibold tracking-widest text-slate-800 dark:text-slate-200"
+                      className="w-full text-sm bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 font-semibold tracking-widest text-slate-800 dark:text-slate-200"
                     />
                   </div>
 
@@ -955,7 +967,7 @@ export default function App() {
       </main>
 
       {/* Footer support credits representation */}
-      <footer className="border-t border-slate-100 dark:border-slate-900 bg-white dark:bg-slate-950/60 py-6 mt-12 text-center text-xs text-slate-450">
+      <footer className="border-t border-slate-100 dark:border-slate-900 bg-white dark:bg-slate-950/60 py-6 mt-12 text-center text-xs text-slate-500">
         <p className="font-medium text-slate-500">
           MindSpace is a free, open-source mental wellness self-care system designed for competitive exams.
         </p>

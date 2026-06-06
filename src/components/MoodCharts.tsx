@@ -173,7 +173,7 @@ export default function MoodCharts({ logs }: MoodChartsProps) {
                 key={log.id}
                 x={x}
                 y={svgH - 4}
-                className="text-[9px] ... font-medium fill-slate-500 dark:fill-slate-400"
+                className="text-[9px] font-medium fill-slate-500 dark:fill-slate-400"
                 textAnchor="middle"
               >
                 {formatDateLabel(log.date)}
@@ -242,7 +242,7 @@ export default function MoodCharts({ logs }: MoodChartsProps) {
               Weekly Rhythm
             </span>
           </div>
-          <div className="bg-slate-50/50 dark:bg-slate-800/20 p-4 rounded-2xl border border-slate-100/60 dark:border-slate-850">
+          <div className="bg-slate-50/50 dark:bg-slate-800/20 p-4 rounded-2xl border border-slate-100/60 dark:border-slate-800">
             {renderTrendLine(last7DaysLogs)}
           </div>
         </div>
@@ -257,7 +257,7 @@ export default function MoodCharts({ logs }: MoodChartsProps) {
               Monthly Pulse
             </span>
           </div>
-          <div className="bg-slate-50/50 dark:bg-slate-800/20 p-4 rounded-2xl border border-slate-100/60 dark:border-slate-850">
+          <div className="bg-slate-50/50 dark:bg-slate-800/20 p-4 rounded-2xl border border-slate-100/60 dark:border-slate-800">
             {renderTrendLine(last30DaysHeatmap.map(day => {
               // Extract log entries if logged, otherwise fallback to construct continuous trend line representation
               const logsOnThisDate = logs.filter(l => l.date === day.date);
@@ -295,7 +295,7 @@ export default function MoodCharts({ logs }: MoodChartsProps) {
           <div className="grid grid-cols-6 sm:grid-cols-10 gap-2.5 py-2">
             {last30DaysHeatmap.map((day) => {
               // Color mapping based on trigger count (intensity)
-              let colorClass = "bg-slate-100 dark:bg-slate-850 hover:border-slate-300";
+              let colorClass = "bg-slate-100 dark:bg-slate-800 hover:border-slate-300";
               if (day.intensity > 0) {
                 if (day.intensity <= 1) {
                   colorClass = "bg-indigo-100 text-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-300 border-indigo-200/50 dark:border-indigo-900/40";

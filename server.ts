@@ -103,10 +103,32 @@ Guidelines:
 
   app.post("/api/sync/upload", (req: express.Request, res: express.Response) => {
     const { syncKey, data } = req.body;
+    
+    // Validate existence
     if (!syncKey || !data) {
       res.status(400).json({ error: "syncKey and data are required." });
       return;
     }
+
+    // Validate types & limits to prevent memory exhaustion / injection attacks
+    if (typeof syncKey !== "string" || syncKey.length < 6 || syncKey.length > 30 || !/^[A-Z0-9-]+$/.test(syncKey)) {
+      res.status(400).json({ error: "Invalid sync key format. Must be alphanumeric with hyphens, 6-30 characters." });
+      return;
+    }
+
+    if (typeof data !== "string" || data.length > 50000) {
+      res.status(400).json({ error: "Data payload too large. Safe limit is 50KB." });
+      return;
+    }
+
+    // Evict oldest entries if map exceeds capacity limit (max 1000 backups)
+    if (cloudSyncStore.size >= 1000 && !cloudSyncStore.has(syncKey)) {
+      const oldestKey = cloudSyncStore.keys().next().value;
+      if (oldestKey !== undefined) {
+        cloudSyncStore.delete(oldestKey);
+      }
+    }
+
     cloudSyncStore.set(syncKey, data);
     res.json({ success: true, message: "Backup successfully stored in temporary cloud sync store!" });
   });
@@ -117,6 +139,13 @@ Guidelines:
       res.status(400).json({ error: "syncKey is required." });
       return;
     }
+
+    // Validate format
+    if (typeof syncKey !== "string" || syncKey.length < 6 || syncKey.length > 30 || !/^[A-Z0-9-]+$/.test(syncKey)) {
+      res.status(400).json({ error: "Invalid sync key format." });
+      return;
+    }
+
     const data = cloudSyncStore.get(syncKey);
     if (!data) {
       res.status(404).json({ error: "Backup not found for this key. Please make sure the Sync Key is correct." });
