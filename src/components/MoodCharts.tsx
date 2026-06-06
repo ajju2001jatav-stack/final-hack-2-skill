@@ -35,11 +35,7 @@ export default function MoodCharts({ logs }: MoodChartsProps) {
     return sortedLogs.filter((log) => log.timestamp >= cutoff).slice(-7);
   }, [sortedLogs]);
 
-  // 2. Last 30 Days Trend Calculations
-  const last30DaysLogs = useMemo(() => {
-    const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
-    return sortedLogs.filter((log) => log.timestamp >= cutoff).slice(-30);
-  }, [sortedLogs]);
+
 
   // Graph Width and Height configuration for custom drawing
   const svgW = 500;
@@ -59,7 +55,6 @@ export default function MoodCharts({ logs }: MoodChartsProps) {
 
     const maxItems = targetLogs.length;
     const points: string[] = [];
-    const gridLines: number[] = [];
 
     // Calculate dynamic coordinates
     targetLogs.forEach((log, index) => {

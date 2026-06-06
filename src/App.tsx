@@ -8,24 +8,17 @@ import {
   Heart, 
   Sparkles, 
   Plus, 
-  MapPin, 
   BookOpen, 
-  Calendar, 
   Award, 
-  Activity, 
   Brain, 
-  ChevronRight, 
   CloudLightning, 
   PhoneCall, 
-  LogOut, 
   Save, 
   CheckCircle,
-  HelpCircle,
   TrendingUp,
   RefreshCw,
   Sliders,
   ShieldCheck,
-  Moon,
   Compass
 } from "lucide-react";
 import { MoodLog, MoodValue, WellnessConfig } from "./types";
@@ -704,6 +697,72 @@ export default function App() {
                   </button>
                 </div>
               </form>
+
+              {/* Past Reflections History Feed */}
+              {logs.length > 0 && (
+                <div className="lg:col-span-8 p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl space-y-4 shadow-xs mt-6">
+                  <h4 className="font-bold text-sm text-slate-800 dark:text-white flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-indigo-500" />
+                    <span>Your Reflection Journal History</span>
+                  </h4>
+                  <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 no-scrollbar">
+                    {[...logs]
+                      .sort((a, b) => b.timestamp - a.timestamp)
+                      .map((log) => {
+                        const emojis = ["😢", "😰", "😐", "🙂", "✨"];
+                        const moodLabel = ["Terrible", "Anxious / Low", "Ok / Neutral", "Good focus", "Great / Clear"];
+                        return (
+                          <div key={log.id} className="p-4 bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 rounded-2xl space-y-2.5">
+                            <div className="flex justify-between items-center text-xs">
+                              <span className="font-bold text-slate-700 dark:text-slate-200">
+                                {new Date(log.date).toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
+                              </span>
+                              <span className="bg-slate-200/50 dark:bg-slate-700 px-2 py-0.5 rounded-full font-bold text-slate-800 dark:text-slate-250">
+                                {emojis[log.mood - 1]} {moodLabel[log.mood - 1]}
+                              </span>
+                            </div>
+                            {log.triggers.length > 0 && (
+                              <div className="flex flex-wrap gap-1">
+                                {log.triggers.map((t) => (
+                                  <span key={t} className="text-[10px] bg-indigo-50 dark:bg-indigo-950/45 text-indigo-650 dark:text-indigo-400 font-semibold px-2 py-0.5 rounded-md">
+                                    {t}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            {log.journal && (
+                              <p className="text-xs text-slate-600 dark:text-slate-300 italic leading-relaxed border-l-2 border-indigo-200 pl-3 py-0.5">
+                                "{log.journal}"
+                              </p>
+                            )}
+                            {(log.reflection.todayHard || log.reflection.todayWell || log.reflection.tomorrowWill) && (
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-1.5 border-t border-slate-100 dark:border-slate-800 text-[10px] text-slate-500">
+                                {log.reflection.todayHard && (
+                                  <div>
+                                    <span className="font-bold block text-rose-500">Hardest challenge:</span>
+                                    <span className="dark:text-slate-400">{log.reflection.todayHard}</span>
+                                  </div>
+                                )}
+                                {log.reflection.todayWell && (
+                                  <div>
+                                    <span className="font-bold block text-emerald-500">Managed well:</span>
+                                    <span className="dark:text-slate-400">{log.reflection.todayWell}</span>
+                                  </div>
+                                )}
+                                {log.reflection.tomorrowWill && (
+                                  <div>
+                                    <span className="font-bold block text-indigo-500">Tomorrow target:</span>
+                                    <span className="dark:text-slate-400">{log.reflection.tomorrowWill}</span>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
 
               {/* Sidebar Guide Info */}
               <div className="lg:col-span-4 space-y-6">

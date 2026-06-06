@@ -35,8 +35,14 @@ export async function startServer() {
   app.post("/api/chat", async (req: express.Request, res: express.Response) => {
     try {
       const { message, history } = req.body;
-      if (!message) {
-        res.status(400).json({ error: "Message is required." });
+      
+      // Strict input validation
+      if (typeof message !== "string" || !message.trim() || message.length > 2000) {
+        res.status(400).json({ error: "Message must be a non-empty string up to 2000 characters." });
+        return;
+      }
+      if (history !== undefined && !Array.isArray(history)) {
+        res.status(400).json({ error: "History must be an array of chat messages." });
         return;
       }
 
@@ -70,10 +76,12 @@ Guidelines:
       
       if (Array.isArray(history)) {
         for (const msg of history) {
-          contents.push({
-            role: msg.role === "assistant" ? "model" : "user",
-            parts: [{ text: msg.content }]
-          });
+          if (msg && typeof msg === "object" && typeof msg.content === "string" && (msg.role === "assistant" || msg.role === "user")) {
+            contents.push({
+              role: msg.role === "assistant" ? "model" : "user",
+              parts: [{ text: msg.content }]
+            });
+          }
         }
       }
       
@@ -164,7 +172,7 @@ Guidelines:
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
-    app.get("*", (req: express.Request, res: express.Response) => {
+    app.get("*", (_req: express.Request, res: express.Response) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }

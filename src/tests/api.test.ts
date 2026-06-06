@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { startServer } from "../../server";
 
-let listenerInstance: any;
+let listenerInstance: { close: (cb?: () => void) => void } | null = null;
 
 beforeAll(async () => {
   // Use a unique port for integration tests
@@ -12,9 +12,10 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  if (listenerInstance) {
+  const listener = listenerInstance;
+  if (listener) {
     await new Promise<void>((resolve) => {
-      listenerInstance.close(() => resolve());
+      listener.close(() => resolve());
     });
   }
 });
@@ -70,5 +71,40 @@ describe("API endpoints", () => {
       })
     });
     expect(downloadRes.status).toBe(404);
+  });
+
+  it("should handle chat endpoint and reject invalid payloads", async () => {
+    // 1. Missing message
+    const chatRes1 = await fetch("http://localhost:45678/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        history: []
+      })
+    });
+    expect(chatRes1.status).toBe(400);
+
+    // 2. Invalid history type
+    const chatRes2 = await fetch("http://localhost:45678/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: "hello",
+        history: "not-an-array"
+      })
+    });
+    expect(chatRes2.status).toBe(400);
+
+    // 3. Valid message (offline mode check)
+    const chatRes3 = await fetch("http://localhost:45678/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: "How to deal with exam fatigue?"
+      })
+    });
+    expect(chatRes3.status).toBe(200);
+    const data = await chatRes3.json();
+    expect(data.text).toContain("MindSpace");
   });
 });
