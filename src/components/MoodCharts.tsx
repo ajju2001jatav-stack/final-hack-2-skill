@@ -311,6 +311,9 @@ export default function MoodCharts({ logs }: MoodChartsProps) {
                   key={day.date}
                   id={`heatmap-cell-${day.date}`}
                   className={`aspect-square p-1 border rounded-lg flex flex-col justify-between cursor-help transition-all relative group ${colorClass}`}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Heatmap cell for ${day.label}: ${day.intensity} stressors logged${day.moodValue ? `, mood rating: ${day.moodValue}/5` : ""}`}
                 >
                   <span className="text-[8px] font-bold opacity-60 leading-none">
                     {day.date.split("-")[2]}

@@ -6,9 +6,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-async function startServer() {
+export async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
   app.use(express.json());
 
@@ -169,9 +169,12 @@ Guidelines:
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
+  const listener = app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
   });
+  return { app, listener };
 }
 
-startServer();
+if (process.env.NODE_ENV !== "test") {
+  startServer();
+}

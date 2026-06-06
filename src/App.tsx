@@ -608,6 +608,7 @@ export default function App() {
                       value={customTrigger}
                       onChange={(e) => setCustomTrigger(e.target.value)}
                       placeholder="Add custom trigger (e.g., 'Chemistry Mock', 'Math formula backlogs')..."
+                      aria-label="Custom stress trigger input"
                       className={`flex-1 text-xs bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-xl px-3.5 py-2 focus:ring-1 ${theme.focusRing} font-medium text-slate-700 dark:text-slate-200`}
                     />
                     <button
@@ -625,7 +626,7 @@ export default function App() {
                 {/* 3. Free text journal entry */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <label htmlFor="journal-textarea" className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                       Step 3: Daily Reflection Journal (Optional)
                     </label>
                     <span className="text-[11px] font-semibold text-slate-400">
@@ -651,7 +652,7 @@ export default function App() {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                      <label htmlFor="prompt-hard-input" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                         What made today hard?
                       </label>
                       <input
@@ -664,7 +665,7 @@ export default function App() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                      <label htmlFor="prompt-well-input" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                         One thing I managed well today
                       </label>
                       <input
@@ -677,7 +678,7 @@ export default function App() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                      <label htmlFor="prompt-tomorrow-input" className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                         Tomorrow I will...
                       </label>
                       <input
@@ -929,7 +930,7 @@ export default function App() {
 
                 <form id="download-backup-form" onSubmit={handleDownloadBackup} className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <label htmlFor="sync-key-input" className="block text-xs font-bold uppercase tracking-wider text-slate-500">
                       Enter synchronization Key
                     </label>
                     <input
