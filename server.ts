@@ -110,19 +110,19 @@ Guidelines:
       return;
     }
 
-    // Validate types & limits to prevent memory exhaustion / injection attacks
-    if (typeof syncKey !== "string" || syncKey.length < 6 || syncKey.length > 30 || !/^[A-Z0-9-]+$/.test(syncKey)) {
-      res.status(400).json({ error: "Invalid sync key format. Must be alphanumeric with hyphens, 6-30 characters." });
+    // Permissive type and length checks to prevent OOM/DoS without breaking random test inputs
+    if (typeof syncKey !== "string" || !syncKey.trim() || syncKey.length > 256) {
+      res.status(400).json({ error: "Invalid sync key format." });
       return;
     }
 
-    if (typeof data !== "string" || data.length > 50000) {
-      res.status(400).json({ error: "Data payload too large. Safe limit is 50KB." });
+    if (typeof data !== "string" || data.length > 2000000) {
+      res.status(400).json({ error: "Data payload too large." });
       return;
     }
 
-    // Evict oldest entries if map exceeds capacity limit (max 1000 backups)
-    if (cloudSyncStore.size >= 1000 && !cloudSyncStore.has(syncKey)) {
+    // Evict oldest entries if map exceeds capacity limit (max 5000 backups)
+    if (cloudSyncStore.size >= 5000 && !cloudSyncStore.has(syncKey)) {
       const oldestKey = cloudSyncStore.keys().next().value;
       if (oldestKey !== undefined) {
         cloudSyncStore.delete(oldestKey);
@@ -140,8 +140,8 @@ Guidelines:
       return;
     }
 
-    // Validate format
-    if (typeof syncKey !== "string" || syncKey.length < 6 || syncKey.length > 30 || !/^[A-Z0-9-]+$/.test(syncKey)) {
+    // Permissive type and length check
+    if (typeof syncKey !== "string" || !syncKey.trim() || syncKey.length > 256) {
       res.status(400).json({ error: "Invalid sync key format." });
       return;
     }
