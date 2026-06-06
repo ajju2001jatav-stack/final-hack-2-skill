@@ -1,0 +1,6 @@
+{
+  "name": "MindSpace",
+  "description": "A comprehensive mental wellness tracker, trigger analyzer, and compassionate AI support companion designed for students preparing for competitive exams like JEE, NEET, UPSC, and Board Exams.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
